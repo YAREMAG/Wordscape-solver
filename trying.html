@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <!--<link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />-->
+  <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+
+<body>
+  <div>Enter the letters you would like to solve</div>
+  <input type="text" id="test-input"/>
+  <button id="submit-button" type="submit" pys-onClick="my_function">Submit</button>
+  <div id="test-output"></div>
+
+    <py-env>
+      - inflect
+      - itertools
+      - english-words
+    </py-env>
+    <py-script>
+from js import console
+import inflect
+from english_words import english_words_set
+from itertools import permutations
+
+def wordscape_solver(*args, **kwargs):
+
+    #print('args:', args)
+    #print('kwargs:', kwargs)
+
+    console.log(f'args: {args}')
+    console.log(f'kwargs: {kwargs}')
+
+    text = Element('test-input').element.value
+
+    #print('text:', text)
+    console.log(f'text: {text}')
+
+    Element('test-output').element.innerText = text
+
+    p = inflect.engine()
+
+    keywords = [''.join(i) for i in permutations(text)]
+    keywords_3 = [''.join(i) for i in permutations(text, 3)]
+    keywords_4 = [''.join(i) for i in permutations(text, 4)]
+    keywords_5 = [''.join(i) for i in permutations(text, 5)]
+
+    keywords = keywords_3 +keywords_4 +keywords_5+keywords
+    real_words = []
+
+    for x in keywords:
+      if x in english_words_set:
+        real_words.append(x)
+        if len(x)< 5:
+          real_words.append(p.plural(x))
+
+    Element('test-output').element.innerText = keywords
+    </py-script>
+
+</body>
+</html>
