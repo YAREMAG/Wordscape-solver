@@ -3,7 +3,7 @@
 <html>
 
 <head>
-  <!--<link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />-->
+  <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
   <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
 </head>
 
@@ -16,46 +16,45 @@
     <py-env>
       - inflect
       - itertools
-      - english-words
     </py-env>
     <py-script>
-from js import console
-import inflect
-from english_words import english_words_set
-from itertools import permutations
+        from js import console
+        import inflect
+        from itertools import permutations
 
-def wordscape_solver(*args, **kwargs):
+        def wordscape_solver(*args, **kwargs):
+            var randomWords = require('random-words');
+                console.log(randomWords());
+            #print('args:', args)
+            #print('kwargs:', kwargs)
 
-    #print('args:', args)
-    #print('kwargs:', kwargs)
+            console.log(f'args: {args}')
+            console.log(f'kwargs: {kwargs}')
 
-    console.log(f'args: {args}')
-    console.log(f'kwargs: {kwargs}')
+            text = Element('test-input').element.value
 
-    text = Element('test-input').element.value
+            #print('text:', text)
+            console.log(f'text: {text}')
 
-    #print('text:', text)
-    console.log(f'text: {text}')
+            Element('test-output').element.innerText = text
 
-    Element('test-output').element.innerText = text
+            p = inflect.engine()
 
-    p = inflect.engine()
+            keywords = [''.join(i) for i in permutations(text)]
+            keywords_3 = [''.join(i) for i in permutations(text, 3)]
+            keywords_4 = [''.join(i) for i in permutations(text, 4)]
+            keywords_5 = [''.join(i) for i in permutations(text, 5)]
 
-    keywords = [''.join(i) for i in permutations(text)]
-    keywords_3 = [''.join(i) for i in permutations(text, 3)]
-    keywords_4 = [''.join(i) for i in permutations(text, 4)]
-    keywords_5 = [''.join(i) for i in permutations(text, 5)]
+            keywords = keywords_3 +keywords_4 +keywords_5+keywords
+            real_words = []
 
-    keywords = keywords_3 +keywords_4 +keywords_5+keywords
-    real_words = []
+            for x in keywords:
+              if x in english_words_set:
+                real_words.append(x)
+                if len(x)< 5:
+                  real_words.append(p.plural(x))
 
-    for x in keywords:
-      if x in english_words_set:
-        real_words.append(x)
-        if len(x)< 5:
-          real_words.append(p.plural(x))
-
-    Element('test-output').element.innerText = keywords
+            Element('test-output').element.innerText = keywords
     </py-script>
 
 </body>
